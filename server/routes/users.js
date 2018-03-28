@@ -1,5 +1,6 @@
-var express = require('express');
-var router = express.Router();
+// 所有接口输出
+let express = require('express');
+let router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
