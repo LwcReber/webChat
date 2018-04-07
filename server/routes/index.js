@@ -17,7 +17,6 @@ function addUser(res, param) {
       return User.create(param, {
         transaction: t
       }).then(function(result) {
-        console.log(result);
         res.end(JSON.stringify({code: 1, msg: '注册成功'}));
       }).catch(function(err) {
         console.log(err);
@@ -29,9 +28,12 @@ function addUser(res, param) {
 router.post('/register', (req, res) => {
   // post请求参数对象 ：req.body;
   var saveUser = {
-    name: req.body.name,
-    password: req.body.password,
+    name: req.body.data.name,
+    password: req.body.data.password,
   };
+  console.log(req.body);
+ // res.end({code: 0, msg: '成功'})
+ // return;
   // 查询是否已经存在该用户名
   User.findAll({
       where:{
@@ -40,14 +42,14 @@ router.post('/register', (req, res) => {
   }).then((result) => {
       // 用户名已经存在
       if(result.length > 0) {
-        res.end(JSON.stringify({code: -1, msg: '该用户名已被注册'}));
+        res.end({code: -1, msg: '该用户名已被注册'});
       } else {
       // 添加用户
         addUser(res ,saveUser);
       }
   }).catch((err) => {
       console.log(err);
-      res.end(JSON.stringify({code: -1, msg: err}));
+      res.end({code: -1, msg: err});
   });
 })
 
@@ -60,10 +62,10 @@ router.get('/login', (req, res) => {
         name: req.query.name,
         password: req.query.password,
       }
-  }).then((result) =>{
+  }).then((result) => {
       // 用户名已经存在
       if(result.length > 0) {
-        res.end(JSON.stringify({code: 1, msg: '登录'}));
+        res.end(JSON.stringify({code: 1, msg: '登录成功'}));
         res.cookie('name', param.query.name , { maxAge: new Date(Date.now() + 900000), httpOnly: false });
       } else {
         res.end(JSON.stringify({code: -1, msg: '用户名或密码错误'}));
